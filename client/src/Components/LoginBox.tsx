@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { useNavigate } from "react-router-dom"
 import { MdOutlineVisibilityOff,MdOutlineVisibility } from "react-icons/md";
 import { signINdata } from '../Assets/Types';
-
+import { userLogin } from '../Services/Auth';
 const LoginBox = () => {
 
     const [visible,setVisible]=useState<boolean>(false)
@@ -15,21 +15,29 @@ const LoginBox = () => {
     const [email,setEmail]=useState<string>('')
     const [pass,setPass]=useState<string>('')
 
-    function submit(){
+    async function submit(){
         const signindata : signINdata={
           email:email,
           password:pass
         }
-        console.log(signindata)
+        const response=await userLogin(signindata);
+        if(response.msg=="LogginSuccessful"){
+          console.log(response.user)
+          navigate('/dashboard')
+        }
+        else{
+          console.log(response.msg)
+        }
+        
     }
     
   return (
-    <div className='border shadow-lg w-2/3 rounded-xl p-5 py-8'>
+    <div className='border shadow-lg w-[90%] lg:w-2/3 rounded-xl p-5 pb-5'>
         <div className='flex items-center justify-between px-8'>
-        <h1 className='text-3xl text-primary font-black'>Fill what we know <span className='text-secondary'>!</span></h1>
+        <h1 className='text-2xl lg:text-3xl text-primary font-black'>Fill what we know <span className='text-secondary'>!</span></h1>
         </div>
         
-      <form className='mt-10 flex flex-col gap-6 px-8'> 
+      <form className='mt-5 flex flex-col gap-6 px-8'> 
 
       <input type='mail' placeholder='Email' className='border-b p-2' onChange={(e)=>setEmail(e.target.value)}/>
       <div className='flex items-center justify-between border-b'>

@@ -4,15 +4,18 @@ import signupimage from '../Assets/signUp.png'
 import { useState } from 'react'
 import OTPBox from '../Components/OTPBox'
 import {signUPdata} from '../Assets/Types'
+import { userSignUp } from '../Services/Auth'
 const SignUp = () => {
 
 const [otpgen,setotpgen]=useState<boolean>(false)
-const [signupdata,setsignupdata]=useState<signUPdata>({
-  firstname:'',
-  lastname:'',
-  password:'',
-  email:''
-});
+// const [signupdata,setsignupdata]=useState<signUPdata>({
+//   firstname:'',
+//   lastname:'',
+//   password:'',
+//   email:''
+// });
+const [email,setEmail]=useState<string>('');
+
 
   return (
 
@@ -22,9 +25,12 @@ const [signupdata,setsignupdata]=useState<signUPdata>({
       </div>
 {
   otpgen?
-  <div className='order-2 flex items-center w-full justify-center lg:justify-start' > <OTPBox signupdata={signupdata}/></div>:
   <div className='order-2 flex items-center w-full justify-center lg:justify-start' > 
-  <SignUpBox setotpgen={setotpgen} setsignupdata={setsignupdata} /></div>
+  <OTPBox email={email}/>
+  </div>
+  :
+  <div className='order-2 flex items-center w-full justify-center lg:justify-start' > 
+  <SignUpBox setotpgen={setotpgen} setUserEmail={setEmail}  /></div>
 }
     </div>
 

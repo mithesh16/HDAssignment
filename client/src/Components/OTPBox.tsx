@@ -1,14 +1,16 @@
 import React, { useState,ChangeEvent, KeyboardEvent } from 'react'
 import {signUPdata} from '../Assets/Types';
-
+import { verifyUserOTP } from '../Services/Auth';
+import { useNavigate } from "react-router-dom"
 interface Props{
-  signupdata:signUPdata
+  email:string
 }
 
-const OTPBox = ({signupdata}:Props) => {
-  const email:string=signupdata.email
+const OTPBox = ({email}:Props) => {
+  const navigate = useNavigate()
   const [otp,setOtp]=useState <string[]>(['','','',''])
-
+  const user = sessionStorage.getItem('signupdata');
+  //const userData: signUPdata = JSON.parse(user);
 function changeOTP(val:string,key:number){
   const newOtp = [...otp];
         newOtp[key] = val;
@@ -19,6 +21,20 @@ const handleKeyDown = (e:KeyboardEvent<HTMLInputElement>) => {
       e.preventDefault();  // Prevent space input
   }
 };
+
+async function verifyOTP(){
+try {
+  const resp=await verifyUserOTP(user?user:'',otp.join(''))
+if(resp.msg=="OTPVERIFIED"){
+  console.log("User Created")
+ navigate('/dashboard')
+}
+} catch (error:any) {
+  console.log(error.msg)
+}
+  
+}
+
   return (
 <div className='w-[90%] lg:w-3/4 p-10 border shadow-lg rounded-lg'>
   <div className=''>
@@ -40,7 +56,7 @@ const handleKeyDown = (e:KeyboardEvent<HTMLInputElement>) => {
             ))}
     </form>
 
-    <button className='text-xl p-4 bg-primary w-full rounded-lg text-white' onClick={()=>console.log(otp.join(''))}>Verify</button>
+    <button className='text-xl p-4 bg-primary w-full rounded-lg text-white' onClick={verifyOTP}>Verify</button>
     <p className='text-center text-sm text-primary mt-3'>Didn't recieve code?<a href='/' className='text-secondary'> Resend</a> </p>
   </div>
 

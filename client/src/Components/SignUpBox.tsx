@@ -2,16 +2,18 @@ import React,{useState} from 'react'
 import { MdOutlineVisibilityOff,MdOutlineVisibility } from "react-icons/md";
 import { useNavigate } from "react-router-dom"
 import {signUPdata} from '../Assets/Types';
+import { userSignUp } from '../Services/Auth'
 
 interface Props{
   setotpgen:React.Dispatch<React.SetStateAction<boolean>>
-  setsignupdata:React.Dispatch<React.SetStateAction<signUPdata>>
+  setUserEmail:React.Dispatch<React.SetStateAction<string>>
 }
 
+const SignUpBox = ({setotpgen,setUserEmail}:Props) => {
 
-const SignUpBox = ({setotpgen,setsignupdata}:Props) => {
   const [passwordvisible,setpassVisible]=useState<boolean>(false)
   const [confirmvisible,setconfirmVisible]=useState<boolean>(false)
+
   function togglePassVisible(){
       setpassVisible(!passwordvisible);
   }
@@ -26,12 +28,16 @@ const[cpass,setCPass]=useState<string>('')
 const[contact,setContact]=useState<string>('')
 const[email,setEmail]=useState<string>('')
 
-const navigate = useNavigate()
+const emailRegex= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-function submit(){
+
+async function submit(){
 
   if(fname===''||lname===''||pass===''||cpass===''||contact===''||email===''){
     alert("Enter all data")
+  }
+  else if(!email.match(emailRegex)){
+    alert("Enter Valid Email")
   }
   else if(pass!==cpass){
     alert("Passwords not matching")
@@ -43,11 +49,21 @@ function submit(){
     password:pass,
     email:email
   }
-  console.log(signupdata)
-  setsignupdata(signupdata);
-  setotpgen(true)
+    const resp=await userSignUp(signupdata);
+      if(resp.msg=="ExistingUser"){
+        alert("User already exists")
+      }
+      else if(resp.msg=="OTPSENT"){
+          sessionStorage.setItem('signupdata',JSON.stringify(signupdata))
+          setUserEmail(email)
+          setotpgen(true)
+      }
+    else{
+      console.log(resp)
+    }
+  }
 }
-}
+
 
   return (
     <div className='border shadow-lg w-[90%] lg:w-2/3 rounded-xl p-5 pb-5'>
