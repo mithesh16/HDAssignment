@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { MdOutlineVisibilityOff,MdOutlineVisibility } from "react-icons/md";
 import { signINdata } from '../Assets/Types';
 import { userLogin } from '../Services/Auth';
+import toast from 'react-hot-toast';
 const LoginBox = () => {
 
     const [visible,setVisible]=useState<boolean>(false)
@@ -16,20 +17,26 @@ const LoginBox = () => {
     const [pass,setPass]=useState<string>('')
 
     async function submit(){
+      if(email==''||pass==''){
+        toast.error("Please fill all the fields")
+      }
+      else{
         const signindata : signINdata={
           email:email,
           password:pass
         }
         const response=await userLogin(signindata);
-        if(response.msg=="LogginSuccessful"){
-          console.log(response.user)
+        if(response.msg=="LoginSuccessful"){
+          toast.success("Log in successful")
+          localStorage.setItem('jwt',response.token)
+          localStorage.setItem('user',JSON.stringify(response.user))
           navigate('/dashboard')
         }
         else{
-          console.log(response.msg)
+          toast.error(response.msg)
         }
         
-    }
+    }}
     
   return (
     <div className='border shadow-lg w-[90%] lg:w-2/3 rounded-xl p-5 pb-5'>
@@ -63,6 +70,7 @@ const LoginBox = () => {
         </div>
         
       </form>
+  
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useState } from 'react'
 import OTPBox from '../Components/OTPBox'
 import {signUPdata} from '../Assets/Types'
 import { userSignUp } from '../Services/Auth'
+
 const SignUp = () => {
 
 const [otpgen,setotpgen]=useState<boolean>(false)
@@ -30,8 +31,9 @@ const [email,setEmail]=useState<string>('');
   </div>
   :
   <div className='order-2 flex items-center w-full justify-center lg:justify-start' > 
-  <SignUpBox setotpgen={setotpgen} setUserEmail={setEmail}  /></div>
+  <SignUpBox setotpgen={setotpgen} setUserEmail={setEmail} /></div>
 }
+
     </div>
 
   )

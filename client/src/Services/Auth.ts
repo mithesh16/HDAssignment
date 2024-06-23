@@ -1,6 +1,8 @@
 import { signUPdata,signINdata } from "../Assets/Types"
 const base_url="http://localhost:3000"
 
+const token=localStorage.getItem('jwt')
+
 export const userSignUp=async(userdata:signUPdata)=>{
     
     try {
@@ -55,4 +57,23 @@ return await resp.json();
     console.log(error)
     return error;
 }
+}
+
+
+export const resendOTP=async(email:string)=>{
+    try {
+        const resp=await fetch(`${base_url}/resendotp`,{
+            method:'POST',    
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin':' http://192.168.1.4:3000',
+              },
+            body:JSON.stringify({email})
+    })
+    return await resp.json();
+    }
+     catch (error) {
+        console.log(error)
+        return error;
+    }
 }

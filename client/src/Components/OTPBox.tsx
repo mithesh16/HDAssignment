@@ -1,7 +1,8 @@
 import React, { useState,ChangeEvent, KeyboardEvent } from 'react'
 import {signUPdata} from '../Assets/Types';
-import { verifyUserOTP } from '../Services/Auth';
+import { verifyUserOTP,resendOTP } from '../Services/Auth';
 import { useNavigate } from "react-router-dom"
+import toast, { Toaster } from 'react-hot-toast';
 interface Props{
   email:string
 }
@@ -11,6 +12,7 @@ const OTPBox = ({email}:Props) => {
   const [otp,setOtp]=useState <string[]>(['','','',''])
   const user = sessionStorage.getItem('signupdata');
   //const userData: signUPdata = JSON.parse(user);
+
 function changeOTP(val:string,key:number){
   const newOtp = [...otp];
         newOtp[key] = val;
@@ -26,13 +28,30 @@ async function verifyOTP(){
 try {
   const resp=await verifyUserOTP(user?user:'',otp.join(''))
 if(resp.msg=="OTPVERIFIED"){
-  console.log("User Created")
- navigate('/dashboard')
+  localStorage.setItem('jwt',resp.token)
+  localStorage.setItem('user',JSON.stringify(resp.user))
+  toast.success("User Registered")
+  navigate('/dashboard')
+}
+else{
+  toast.error("OTP Invalid")
 }
 } catch (error:any) {
-  console.log(error.msg)
+  toast.error(error.msg)
 }
   
+}
+
+async function resendotp(){
+  try{
+  const resp=await resendOTP(email);
+  if(resp.msg=="OTPSENT"){
+    toast.success("OTP Sent");
+  }
+  }
+  catch(err:any){
+    toast.error(err.msg)
+  }
 }
 
   return (
@@ -57,9 +76,8 @@ if(resp.msg=="OTPVERIFIED"){
     </form>
 
     <button className='text-xl p-4 bg-primary w-full rounded-lg text-white' onClick={verifyOTP}>Verify</button>
-    <p className='text-center text-sm text-primary mt-3'>Didn't recieve code?<a href='/' className='text-secondary'> Resend</a> </p>
+    <p className='text-center text-sm text-primary mt-3'>Didn't recieve code?<button onClick={resendotp} className='text-secondary'> Resend</button> </p>
   </div>
-
   </div>
   
   )

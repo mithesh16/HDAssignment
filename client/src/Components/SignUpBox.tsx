@@ -3,7 +3,7 @@ import { MdOutlineVisibilityOff,MdOutlineVisibility } from "react-icons/md";
 import { useNavigate } from "react-router-dom"
 import {signUPdata} from '../Assets/Types';
 import { userSignUp } from '../Services/Auth'
-
+import toast, { Toaster } from 'react-hot-toast';
 interface Props{
   setotpgen:React.Dispatch<React.SetStateAction<boolean>>
   setUserEmail:React.Dispatch<React.SetStateAction<string>>
@@ -20,7 +20,7 @@ const SignUpBox = ({setotpgen,setUserEmail}:Props) => {
   function toggleConfirmVisible(){
     setconfirmVisible(!confirmvisible);
 }
-
+//const user = sessionStorage.getItem('signupdata');
 const[fname,setFName]=useState<string>('')
 const[lname,setLName]=useState<string>('')
 const[pass,setPass]=useState<string>('')
@@ -29,18 +29,21 @@ const[contact,setContact]=useState<string>('')
 const[email,setEmail]=useState<string>('')
 
 const emailRegex= /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
+const passwordRegex=/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{8,16}$/
 
 async function submit(){
 
   if(fname===''||lname===''||pass===''||cpass===''||contact===''||email===''){
-    alert("Enter all data")
+    toast.error("Fill all the fields")
   }
   else if(!email.match(emailRegex)){
-    alert("Enter Valid Email")
+    toast.error("Enter a Valid Email")
   }
   else if(pass!==cpass){
-    alert("Passwords not matching")
+    toast.error("Passwords not matching")
+  }
+  else if(!pass.match(passwordRegex)){
+    toast.error(`Password should be \n tleast 8 characters.\n Atleast 1 number. \n Atleast 1 uppercase.`)
   }
   else{
   const signupdata:signUPdata={
@@ -51,15 +54,17 @@ async function submit(){
   }
     const resp=await userSignUp(signupdata);
       if(resp.msg=="ExistingUser"){
-        alert("User already exists")
+        console.log("NO")
+        toast.error("Email already registered,Please Sign in")
       }
       else if(resp.msg=="OTPSENT"){
           sessionStorage.setItem('signupdata',JSON.stringify(signupdata))
+          toast.success("OTP sent")
           setUserEmail(email)
           setotpgen(true)
       }
     else{
-      console.log(resp)
+      toast.error(resp)
     }
   }
 }
@@ -103,6 +108,7 @@ async function submit(){
           e.preventDefault()
           submit()}}> Sign Up</button>
       </form>
+      
     </div>
   )
 }
