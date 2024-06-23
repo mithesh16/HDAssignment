@@ -7,17 +7,17 @@ import bcrypt from "bcryptjs";
 import * as nodemailer from 'nodemailer'
 import OTPModel from '../Models/OTPModel';
 import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
-export const SECRET_KEY: Secret = 'your-secret-key-here';
+import dotenv from 'dotenv'; 
+dotenv.config(); 
 
-const access_token_secret='76867f5af83866f9ea17938856b1b1fe9f07c8b1525d11f0172fc7d0eb6354d719aa9230e74ca6b8af1ae8eccf731b1cfd965ce4691fa0a1c7ed3ed50b9af451';
-const refresh_token_secret='2c2ad763e1d532c0438036549bbc8defe68e6aa0ab3be157479faaa2c5265870447a70dc32c4e0f4c0ee9e3ab1bfaa07b71afa9ea64c09e5c4bce25394a53876'
+const access_token_secret:string=process.env.ACCESS_TOKEN_SECRET?process.env.ACCESS_TOKEN_SECRET:''
 
 const transporter = nodemailer.createTransport({
-    port: 465,               // true for 465, false for other ports
+    port: 465,               
     host: "smtp.gmail.com",
        auth: {
-            user: 'mitheshsrini@gmail.com',
-            pass: 'tgtdfgkdmqhwyznu',
+            user: process.env.USER,
+            pass: process.env.PASS,
          },
     secure: true,
     });

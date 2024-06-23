@@ -29,6 +29,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.3",
-    "nodemailer": "^6.9.14"
+    "nodemailer": "^6.9.14",
+    "ts-node": "^10.9.2"
   }
 }

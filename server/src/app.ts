@@ -20,7 +20,7 @@ app.use('/',loginroutes)
 
 
 
-mongoose.connect("mongodb+srv://mithesh:mithesh16@hdassignment.zv3j6ku.mongodb.net/?retryWrites=true&w=majority&appName=HDassignment")
+mongoose.connect(process.env.URI?process.env.URI:'')
 .then(()=>{
     app.listen(3000,()=>{
         console.log("Connected to DB Server listening at port 3000")
