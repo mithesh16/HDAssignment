@@ -10,14 +10,14 @@ import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv'; 
 dotenv.config(); 
 
-const access_token_secret:string=process.env.ACCESS_TOKEN_SECRET?process.env.ACCESS_TOKEN_SECRET:''
+
 
 const transporter = nodemailer.createTransport({
     port: 465,               
     host: "smtp.gmail.com",
        auth: {
-            user: process.env.USER,
-            pass: process.env.PASS,
+            user: "mitheshsrini@gmail.com",
+            pass: "tgtdfgkdmqhwyznu",
          },
     secure: true,
     });
@@ -46,6 +46,7 @@ export const login=async(req:any,resp:any)=>{
     if(existingUser){
     const isMatch=await bcrypt.compare(password,existingUser.password)
     if(isMatch){
+        const access_token_secret:string=process.env.ACCESS_TOKEN_SECRET?process.env.ACCESS_TOKEN_SECRET:''
         const token=jwt.sign({id:existingUser._id},access_token_secret)
         existingUser.password=''
         resp.status(200).json({msg:"LoginSuccessful",user:existingUser,token:token});
@@ -114,7 +115,7 @@ export const verifyOTP=async(req:any,resp:any)=>{
         const newUser=await User.create({firstname,lastname,email,password:hashedPassword})
        if(newUser){
         const deleteOTP=await OTPModel.deleteOne({_id:existingOTP._id})
-        console.log(deleteOTP)
+        const access_token_secret:string=process.env.ACCESS_TOKEN_SECRET?process.env.ACCESS_TOKEN_SECRET:''
         const token=jwt.sign({id:newUser._id},access_token_secret)
         newUser.password=''
         resp.status(200).json({msg:"OTPVERIFIED",user:newUser,token:token});
