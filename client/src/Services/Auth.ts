@@ -2,7 +2,9 @@ import { signUPdata,signINdata } from "../Assets/Types"
 
 import dotenv from 'dotenv'; 
 dotenv.config();
-const base_url=process.env.REACT_APP_BASE_URL?process.env.REACT_APP_BASE_URL:''
+//const base_url=process.env.REACT_APP_BASE_URL?process.env.REACT_APP_BASE_URL:''
+const base_url="https://hdassignment.onrender.com"
+// const base_url="http://localhost:3000"
 const token=localStorage.getItem('jwt')
 
 export const userSignUp=async(userdata:signUPdata)=>{
