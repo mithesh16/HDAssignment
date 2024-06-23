@@ -1,6 +1,8 @@
 import { signUPdata,signINdata } from "../Assets/Types"
-const base_url="http://localhost:3000"
 
+import dotenv from 'dotenv'; 
+dotenv.config();
+const base_url=process.env.BASE_URL?process.env.BASE_URL:''
 const token=localStorage.getItem('jwt')
 
 export const userSignUp=async(userdata:signUPdata)=>{
