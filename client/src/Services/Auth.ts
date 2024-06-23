@@ -2,7 +2,7 @@ import { signUPdata,signINdata } from "../Assets/Types"
 
 import dotenv from 'dotenv'; 
 dotenv.config();
-const base_url=process.env.BASE_URL?process.env.BASE_URL:''
+const base_url=process.env.REACT_APP_BASE_URL?process.env.REACT_APP_BASE_URL:''
 const token=localStorage.getItem('jwt')
 
 export const userSignUp=async(userdata:signUPdata)=>{
